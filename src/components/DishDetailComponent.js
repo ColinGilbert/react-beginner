@@ -1,8 +1,18 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, CardImg, CardBody, CardTitle, CardText } from "reactstrap";
+import {
+  Card,
+  CardImg,
+  CardBody,
+  CardTitle,
+  CardText,
+  Breadcrumb,
+  BreadcrumbItem,
+} from "reactstrap";
+import { Link } from "react-router-dom";
 import Comments from "./CommentsComponent";
 
 const DishDetail = (props) => {
+  console.log(props);
   const renderDish = (d) => {
     if (d === null) {
       return <></>;
@@ -24,14 +34,22 @@ const DishDetail = (props) => {
   };
 
   return (
-    <div className="row">
-      <div className="col-md-5 col-xs-12 col-sm-12 m-1">
-        {renderDish(props.dish)}
+    <>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <Link to="/menu">Menu</Link>
+        </BreadcrumbItem>
+        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+      </Breadcrumb>
+      <div className="row">
+        <div className="col-md-5 col-xs-12 col-sm-12 m-1">
+          {renderDish(props.dish)}
+        </div>
+        <div className="col-md-5 col-xs-12 col-sm-12 m-1">
+          <Comments comments={props.comments} />
+        </div>
       </div>
-      <div className="col-md-5 col-xs-12 col-sm-12 m-1">
-        <Comments comments={props.dish.comments} />
-      </div>
-    </div>
+    </>
   );
 };
 
