@@ -6,26 +6,28 @@ import Footer from "./FooterComponent";
 import Home from "./HomeComponent";
 import DishDetail from "./DishDetailComponent";
 import About from "./AboutComponent";
-import { Route, Redirect, Switch } from "react-router-dom";
-import { COMMENTS } from "../shared/comments";
-import { PROMOTIONS } from "../shared/promotions";
-import { LEADERS } from "../shared/leaders";
-import { DISHES } from "../shared/dishes";
+import { Route, Redirect, Switch, withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import "../App.css";
 
-const DishWithId = ({ match }) => {
-  return (
-    <DishDetail
-      dish={DISHES.filter((d) => d.id === parseInt(match.params.dishId))[0]}
-      comments={COMMENTS.filter(
-        (c) => c.dishId === parseInt(match.params.dishId)
-      )}
-    />
-  );
-};
-
 const Main = (props) => {
+  const dispatch = useDispatch();
+  const dishes = useSelector((state) => state.dishes);
+  const promotions = useSelector((state) => state.promotions);
+  const leaders = useSelector((state) => state.leaders);
+  const comments = useSelector((state) => state.comments);
+
+  const DishWithId = ({ match }) => {
+    return (
+      <DishDetail
+        dish={dishes.filter((d) => d.id === parseInt(match.params.dishId))[0]}
+        comments={comments.filter(
+          (c) => c.dishId === parseInt(match.params.dishId)
+        )}
+      />
+    );
+  };
   //   const [selectedDish, setSelectedDish] = useState({});
 
   //   const onDishSelect = (e) => {
@@ -47,9 +49,9 @@ const Main = (props) => {
           component={() => {
             return (
               <Home
-                dish={DISHES.filter((d) => d.featured)[0]}
-                leader={LEADERS.filter((l) => l.featured)[0]}
-                promotion={PROMOTIONS.filter((p) => p.featured)[0]}
+                dish={dishes.filter((d) => d.featured)[0]}
+                leader={leaders.filter((l) => l.featured)[0]}
+                promotion={promotions.filter((p) => p.featured)[0]}
               />
             );
           }}
@@ -57,9 +59,9 @@ const Main = (props) => {
         <Route
           exact
           path="/aboutus"
-          component={() => <About leaders={LEADERS} />}
+          component={() => <About leaders={leaders} />}
         />
-        <Route exact path="/menu" component={() => <Menu dishes={DISHES} />} />
+        <Route exact path="/menu" component={() => <Menu dishes={dishes} />} />
         <Route path="/menu/:dishId" component={DishWithId} />
         <Route exact path="/contactus" component={Contact} />
         <Redirect to="/home" />

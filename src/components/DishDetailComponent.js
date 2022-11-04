@@ -12,7 +12,6 @@ import { Link } from "react-router-dom";
 import Comments from "./CommentsComponent";
 
 const DishDetail = (props) => {
-  console.log(props);
   const renderDish = (d) => {
     if (d === null) {
       return <></>;
