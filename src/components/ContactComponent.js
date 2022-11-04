@@ -3,85 +3,30 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
-  Form,
   Row,
-  FormGroup,
   Label,
-  Input,
   Col,
-  FormFeedback,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import { Control, LocalForm, Errors } from "react-redux-form";
+import { Control, LocalForm, Errors, actions } from "react-redux-form";
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !val || val.length <= len;
+const minLength = (len) => (val) => !val || val.length >= len;
+const isNumber = (val) => !isNaN(Number(val));
+const validEmail = (val) => {
+  return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
+};
 class Contact extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   firstName: "",
-    //   lastName: "",
-    //   email: "",
-    //   telNum: "",
-    //   agree: false,
-    //   contactType: "Tel.",
-    //   message: "",
-    //   touched: {
-    //     firstName: false,
-    //     lastName: false,
-    //     telNum: false,
-    //     email: false,
-    //   },
-    // };
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleInputChange = this.handleInputChange.bind(this);
-    // this.handleBlur = this.handleBlur.bind(this);
-    // this.validate = this.validate.bind(this);
   }
-
-  //   handleInputChange(event) {
-  //     const target = event.target;
-  //     const value = target.type === "checkbox" ? target.checked : target.value;
-  //     const name = target.name;
-  //     this.setState({ [name]: value });
-  //   }
 
   handleSubmit(values) {
     console.log("Current state is " + JSON.stringify(values));
     alert(JSON.stringify(values));
   }
-
-  //   handleBlur = (field) => {
-  //     this.setState({ touched: { ...this.state.touched, [field]: true } });
-  //   };
-
-  //   validate(firstName, lastName, telNum, email) {
-  //     const errors = {
-  //       firstName: "",
-  //       lastName: "",
-  //       telNum: "",
-  //       email: "",
-  //     };
-  //     if (this.state.touched.firstName && firstName.length < 3)
-  //       errors.firstName = "First name should be >= 3 characters";
-  //     else if (this.state.touched.firstName && firstName.length > 10)
-  //       errors.firstName = "First name should be <= 10 characters";
-
-  //     if (this.state.touched.lastName && lastName.length < 3)
-  //       errors.lastName = "Last name should be >= 3 characters";
-  //     else if (this.state.touched.lastName && lastName.length > 10)
-  //       errors.lastName = "Last name should be <= 10 characters";
-
-  //     const reg = /^\d+$/;
-  //     if (this.state.touched.telNum && !reg.test(telNum))
-  //       errors.telNum = "Telephone number should only contain numbers";
-
-  //     if (
-  //       this.state.touched.email &&
-  //       email.split("").filter((x) => x === "@").length !== 1
-  //     )
-  //       errors.email = "Email address needs an @ symbol";
-
-  //     return errors;
-  //   }
 
   render() {
     return (
@@ -156,6 +101,21 @@ class Contact extends Component {
                     name="firstName"
                     placeholder="First Name"
                     className="form-control"
+                    validators={{
+                      required,
+                      minLength: minLength(3),
+                      maxLength: maxLength(15),
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".firstName"
+                    show="touched"
+                    messages={{
+                      required: "Required",
+                      minLength: "Must be greater than 2 characters",
+                      maxLength: "Must be 15 characters or less",
+                    }}
                   />
                 </Col>
               </Row>
@@ -170,6 +130,21 @@ class Contact extends Component {
                     name="lastName"
                     placeholder="Last Name"
                     className="form-control"
+                    validators={{
+                      required,
+                      minLength: minLength(3),
+                      maxLength: maxLength(15),
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".lastName"
+                    show="touched"
+                    messages={{
+                      required: "Required",
+                      minLength: "Must be greater than 2 characters",
+                      maxLength: "Must be 15 characters or less",
+                    }}
                   />
                 </Col>
               </Row>
@@ -185,11 +160,28 @@ class Contact extends Component {
                     name="telNum"
                     placeholder="Telephone Number"
                     className="form-control"
+                    validators={{
+                      required,
+                      minLength: minLength(3),
+                      maxLength: maxLength(15),
+                      isNumber,
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".telNum"
+                    show="touched"
+                    messages={{
+                      required: "Required\n",
+                      minLength: "Must be greater than 2 characters",
+                      maxLength: "Must be 15 characters or less",
+                      isNumber: "Must be a number",
+                    }}
                   />
                 </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="telnum" md={2}>
+                <Label htmlFor="email" md={2}>
                   Email
                 </Label>
                 <Col md={10}>
@@ -200,6 +192,23 @@ class Contact extends Component {
                     name="email"
                     placeholder="Email Address"
                     className="form-control"
+                    validators={{
+                      required,
+                      minLength: minLength(3),
+                      maxLength: maxLength(15),
+                      validEmail,
+                    }}
+                  />
+                  <Errors
+                    className="text-danger"
+                    model=".email"
+                    show="touched"
+                    messages={{
+                      required: "Required",
+                      minLength: "Must be greater than 2 characters",
+                      maxLength: "Must be 15 characters or less",
+                      validEmail: "Must be a valid email",
+                    }}
                   />
                 </Col>
               </Row>
