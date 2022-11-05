@@ -6,13 +6,11 @@ import Footer from "./FooterComponent";
 import Home from "./HomeComponent";
 import DishDetail from "./DishDetailComponent";
 import About from "./AboutComponent";
-import { Route, Redirect, Switch, withRouter } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
+import { Route, Redirect, Switch } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "../App.css";
 
 const Main = (props) => {
-  const dispatch = useDispatch();
   const dishes = useSelector((state) => state.dishes);
   const promotions = useSelector((state) => state.promotions);
   const leaders = useSelector((state) => state.leaders);

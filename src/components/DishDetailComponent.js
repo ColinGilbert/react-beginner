@@ -8,106 +8,12 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
-  Modal,
-  ModalBody,
-  ModalText,
-  ModalHeader,
-  Row,
-  Input,
-  Col,
-  Label,
 } from "reactstrap";
-import { Control, LocalForm, Errors, actions } from "react-redux-form";
 
 import { Link } from "react-router-dom";
 import Comments from "./CommentsComponent";
-import { useState, Component } from "react";
-
-const required = (val) => val && val.length;
-const maxLength = (len) => (val) => !val || val.length <= len;
-const minLength = (len) => (val) => !val || val.length >= len;
-
-class CommentForm extends Component {
-  submitForm(values) {
-    alert(JSON.stringify(values));
-  }
-  render() {
-    const { isOpen } = this.props;
-    const { toggle } = this.props;
-    return (
-      <Modal isOpen={isOpen} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Submit Comment</ModalHeader>
-        <ModalBody className="ml-0">
-          <LocalForm onSubmit={this.submitForm.bind(this)}>
-            <Row>
-              <Col>
-                <Label htmlFor="rating">Rating</Label>
-                <Control.select
-                  model=".rating"
-                  type="select"
-                  name="rating"
-                  className="form-select"
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Control.select>
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col>
-                <Label htmlFor="author">Your Name</Label>
-                <Control.text
-                  model=".author"
-                  type="text"
-                  name="name"
-                  className="form-control"
-                  placeholder="Your Name"
-                  validators={{
-                    required,
-                    minLength: minLength(3),
-                    maxLength: maxLength(15),
-                  }}
-                />
-                <Errors
-                  className="text-danger"
-                  model=".author"
-                  show="touched"
-                  messages={{
-                    required: "Required",
-                    minLength: "Must be greater than 2 characters",
-                    maxLength: "Must be 15 characters or less",
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col>
-                <Label htmlFor="comment">Comment</Label>
-                <Control.textarea
-                  model=".comment"
-                  type="textarea"
-                  name="comment"
-                  className="form-control"
-                  rows="7"
-                />
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Col md={{ size: 1 }}>
-                <Button type="submit" color="primary">
-                  Submit
-                </Button>
-              </Col>
-            </Row>
-          </LocalForm>
-        </ModalBody>
-      </Modal>
-    );
-  }
-}
+import { useState } from "react";
+import CommentForm from "./CommentForm";
 
 const DishDetail = (props) => {
   const [modal, setModal] = useState(false);
@@ -135,7 +41,7 @@ const DishDetail = (props) => {
 
   return (
     <>
-      <CommentForm isOpen={modal} toggle={toggle} />
+      <CommentForm isOpen={modal} toggle={toggle} dishId={props.dish.id} />
       <Breadcrumb>
         <BreadcrumbItem>
           <Link to="/menu">Menu</Link>
