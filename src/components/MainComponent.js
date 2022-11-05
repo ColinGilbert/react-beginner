@@ -1,37 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Menu from "./MenuComponent";
 import Contact from "./ContactComponent";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
-import Home from "./HomeComponent";
+import HomePage from "./HomePageComponent";
 import DishDetail from "./DishDetailComponent";
 import About from "./AboutComponent";
 import { Route, Redirect, Switch } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDishes } from "../redux/ActionCreator";
 import "../App.css";
 
 const Main = (props) => {
+  const dispatch = useDispatch();
   const dishes = useSelector((state) => state.dishes);
   const promotions = useSelector((state) => state.promotions);
   const leaders = useSelector((state) => state.leaders);
   const comments = useSelector((state) => state.comments);
 
+  // const fetchDishes = useCallback(() => {
+  //   dispatch(fetchDishes());
+  // }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchDishes());
+  }, [dispatch]);
+
   const DishWithId = ({ match }) => {
     return (
       <DishDetail
-        dish={dishes.filter((d) => d.id === parseInt(match.params.dishId))[0]}
+        dish={
+          dishes.dishes.filter((d) => d.id === parseInt(match.params.dishId))[0]
+        }
         comments={comments.filter(
           (c) => c.dishId === parseInt(match.params.dishId)
         )}
+        isLoading={dishes.isLoading}
+        errMess={dishes.errMess}
       />
     );
   };
-  //   const [selectedDish, setSelectedDish] = useState({});
-
-  //   const onDishSelect = (e) => {
-  //     const [dish] = DISHES.filter((d) => d.id === parseInt(e.target.id));
-  //     setSelectedDish(dish);
-  //   };
 
   return (
     <div className="App">
@@ -46,10 +54,10 @@ const Main = (props) => {
           path="/home"
           component={() => {
             return (
-              <Home
-                dish={dishes.filter((d) => d.featured)[0]}
-                leader={leaders.filter((l) => l.featured)[0]}
-                promotion={promotions.filter((p) => p.featured)[0]}
+              <HomePage
+                dishes={dishes}
+                leaders={leaders}
+                promotions={promotions}
               />
             );
           }}

@@ -27,7 +27,6 @@ class CommentForm extends Component {
     );
   }
   render() {
-    console.log(this.props);
     const { isOpen } = this.props;
     const { toggle } = this.props;
     return (

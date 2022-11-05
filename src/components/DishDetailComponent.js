@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import Comments from "./CommentsComponent";
 import { useState } from "react";
 import CommentForm from "./CommentForm";
+import Loading from "./LoadingComponent";
 
 const DishDetail = (props) => {
   const [modal, setModal] = useState(false);
@@ -39,28 +40,46 @@ const DishDetail = (props) => {
     }
   };
 
-  return (
-    <>
-      <CommentForm isOpen={modal} toggle={toggle} dishId={props.dish.id} />
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <Link to="/menu">Menu</Link>
-        </BreadcrumbItem>
-        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-      </Breadcrumb>
-      <div className="row text-start">
-        <div className="col-md-5 col-xs-12 col-sm-12 m-1">
-          {renderDish(props.dish)}
-        </div>
-        <div className="col-md-5 col-xs-12 col-sm-12 m-1">
-          <Comments comments={props.comments} />
-          <Button outline className="text-left" onClick={toggle}>
-            <span className="fa fa-pencil fa-large"></span> Submit Comment
-          </Button>
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
         </div>
       </div>
-    </>
-  );
+    );
+  } else if (props.errMess) {
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{props.errMess}</h4>
+        </div>
+      </div>
+    );
+  } else if (props.dish != null) {
+    return (
+      <>
+        <CommentForm isOpen={modal} toggle={toggle} dishId={props.dish.id} />
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/menu">Menu</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="row text-start">
+          <div className="col-md-5 col-xs-12 col-sm-12 m-1">
+            {renderDish(props.dish)}
+          </div>
+          <div className="col-md-5 col-xs-12 col-sm-12 m-1">
+            <Comments comments={props.comments} />
+            <Button outline className="text-left" onClick={toggle}>
+              <span className="fa fa-pencil fa-large"></span> Submit Comment
+            </Button>
+          </div>
+        </div>
+      </>
+    );
+  }
 };
 
 export default DishDetail;
