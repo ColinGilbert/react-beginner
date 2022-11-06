@@ -8,8 +8,15 @@ import DishDetail from "./DishDetailComponent";
 import About from "./AboutComponent";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDishes } from "../redux/ActionCreator";
+import { actions } from "react-redux-form";
 import "../App.css";
+import {
+  addComment,
+  fetchDishes,
+  fetchComments,
+  fetchPromos,
+  postComment,
+} from "../redux/ActionCreators";
 
 const Main = (props) => {
   const dispatch = useDispatch();
@@ -22,8 +29,19 @@ const Main = (props) => {
   //   dispatch(fetchDishes());
   // }, [dispatch]);
 
+  const resetFeedbackForm = () => dispatch(actions.reset("feedback"));
+  const postCommentToServer = (dishId, rating, author, comment) => {
+    dispatch(postComment(dishId, rating, author, comment));
+  };
+
+  // const fetchDishes = () => dispatch(fetchDishes());
+  // const fetchComments = () => dispatch(fetchComments());
+  // const fetchPromos = () => dispatch(fetchPromos());
+
   useEffect(() => {
     dispatch(fetchDishes());
+    dispatch(fetchComments());
+    dispatch(fetchPromos());
   }, [dispatch]);
 
   const DishWithId = ({ match }) => {
@@ -32,11 +50,12 @@ const Main = (props) => {
         dish={
           dishes.dishes.filter((d) => d.id === parseInt(match.params.dishId))[0]
         }
-        comments={comments.filter(
+        comments={comments.comments.filter(
           (c) => c.dishId === parseInt(match.params.dishId)
         )}
         isLoading={dishes.isLoading}
         errMess={dishes.errMess}
+        postComment={postCommentToServer}
       />
     );
   };
@@ -44,11 +63,6 @@ const Main = (props) => {
   return (
     <div className="App">
       <Header />
-      {/*<Menu dishes={DISHES} onDishSelect={onDishSelect} />
-      <div className="container">
-        <DishDetail dish={selectedDish} >
-  </div>*/}
-
       <Switch>
         <Route
           path="/home"
@@ -69,7 +83,11 @@ const Main = (props) => {
         />
         <Route exact path="/menu" component={() => <Menu dishes={dishes} />} />
         <Route path="/menu/:dishId" component={DishWithId} />
-        <Route exact path="/contactus" component={Contact} />
+        <Route
+          exact
+          path="/contactus"
+          component={() => <Contact resetFeedbackForm={resetFeedbackForm} />}
+        />
         <Redirect to="/home" />
       </Switch>
       <Footer />

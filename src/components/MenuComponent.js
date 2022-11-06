@@ -9,13 +9,14 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import Loading from "./LoadingComponent";
+import { baseUrl } from "../shared/base-url";
 
 const RenderMenuItem = ({ dish, onClick }) => {
   return (
     <div className="col-12 col-md-5 m-1">
       <Card value={dish} onClick={onClick}>
         <Link to={`/menu/${dish.id}`}>
-          <CardImg src={dish.image} alt={dish.name} width="100%" />
+          <CardImg src={baseUrl + dish.image} alt={dish.name} width="100%" />
           <CardImgOverlay id={dish.id}>
             <CardTitle id={dish.id}>
               <h5 align="left">

@@ -15,6 +15,7 @@ import Comments from "./CommentsComponent";
 import { useState } from "react";
 import CommentForm from "./CommentForm";
 import Loading from "./LoadingComponent";
+import { baseUrl } from "../shared/base-url";
 
 const DishDetail = (props) => {
   const [modal, setModal] = useState(false);
@@ -26,7 +27,7 @@ const DishDetail = (props) => {
     } else {
       return (
         <Card>
-          <CardImg width="100%" src={d.image} alt={d.name} />
+          <CardImg width="100%" src={baseUrl + d.image} alt={d.name} />
           <CardBody>
             <CardTitle>
               <h5 align="left">
@@ -59,7 +60,12 @@ const DishDetail = (props) => {
   } else if (props.dish != null) {
     return (
       <>
-        <CommentForm isOpen={modal} toggle={toggle} dishId={props.dish.id} />
+        <CommentForm
+          isOpen={modal}
+          toggle={toggle}
+          dishId={props.dish.id}
+          postComment={props.postComment}
+        />
         <Breadcrumb>
           <BreadcrumbItem>
             <Link to="/menu">Menu</Link>

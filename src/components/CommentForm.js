@@ -19,6 +19,13 @@ const minLength = (len) => (val) => !val || val.length >= len;
 
 class CommentForm extends Component {
   submitForm(values) {
+    this.props.postComment(
+      this.props.dishId,
+      values.rating,
+      values.author,
+      values.comment
+    );
+
     this.props.addComment(
       this.props.dishId,
       values.rating,
