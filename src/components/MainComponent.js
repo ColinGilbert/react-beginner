@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Menu from "./MenuComponent";
 import Contact from "./ContactComponent";
 import Header from "./HeaderComponent";
@@ -6,7 +6,7 @@ import Footer from "./FooterComponent";
 import HomePage from "./HomePageComponent";
 import DishDetail from "./DishDetailComponent";
 import About from "./AboutComponent";
-import { Route, Redirect, Switch } from "react-router-dom";
+import { Route, Redirect, Switch, withRouter } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { actions } from "react-redux-form";
 import "../App.css";
@@ -17,6 +17,7 @@ import {
   fetchPromos,
   postComment,
 } from "../redux/ActionCreators";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const Main = (props) => {
   const dispatch = useDispatch();
@@ -59,37 +60,59 @@ const Main = (props) => {
       />
     );
   };
+  const AnimatedSwitch = withRouter(({ location }) => {
+    console.log(location);
+    return (
+      <TransitionGroup>
+        <CSSTransition
+          appear
+          in
+          classNames="page"
+          key={location.key}
+          timeout={1300}
+        >
+          <Switch>
+            <Route
+              path="/home"
+              component={() => {
+                return (
+                  <HomePage
+                    dishes={dishes}
+                    leaders={leaders}
+                    promotions={promotions}
+                  />
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/aboutus"
+              component={() => <About leaders={leaders} />}
+            />
+            <Route
+              exact
+              path="/menu"
+              component={() => <Menu dishes={dishes} />}
+            />
+            <Route path="/menu/:dishId" component={DishWithId} />
+            <Route
+              exact
+              path="/contactus"
+              component={() => (
+                <Contact resetFeedbackForm={resetFeedbackForm} />
+              )}
+            />
+            <Redirect to="/home" />
+          </Switch>
+        </CSSTransition>
+      </TransitionGroup>
+    );
+  });
 
   return (
     <div className="App">
       <Header />
-      <Switch>
-        <Route
-          path="/home"
-          component={() => {
-            return (
-              <HomePage
-                dishes={dishes}
-                leaders={leaders}
-                promotions={promotions}
-              />
-            );
-          }}
-        />
-        <Route
-          exact
-          path="/aboutus"
-          component={() => <About leaders={leaders} />}
-        />
-        <Route exact path="/menu" component={() => <Menu dishes={dishes} />} />
-        <Route path="/menu/:dishId" component={DishWithId} />
-        <Route
-          exact
-          path="/contactus"
-          component={() => <Contact resetFeedbackForm={resetFeedbackForm} />}
-        />
-        <Redirect to="/home" />
-      </Switch>
+      <AnimatedSwitch />
       <Footer />
     </div>
   );
